@@ -20,6 +20,9 @@
 package org.opensubsystems.chronicle.data;
 
 import java.sql.Timestamp;
+import java.util.Date;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import org.opensubsystems.core.data.ModifiableDataObject;
 import org.opensubsystems.core.data.ModifiableDataObjectTest;
 import org.opensubsystems.core.error.OSSException;
@@ -73,6 +76,33 @@ public class BlogTest extends ModifiableDataObjectTest
     * @param lDomainId - Unique ID identifying domain for this test data
     * @param creationTimestamp - creation timestamp for this test data
     * @param modificationTimestamp - modification timestamp for this test data
+    * @param strBlogFolder - Folder allows to categorize Blogs to groups
+    * @param strCaption - More descriptive name of the Blog
+    * @param strComments - Any additional description of the Blog
+    * @return Blog - data to use for testing
+	 * @throws OSSException - an error has occurred
+    */ 
+   protected Blog createTestBlog(
+      long      lId,
+      long      lDomainId,
+      Timestamp creationTimestamp,
+      Timestamp modificationTimestamp,
+      String    strBlogFolder,
+      String    strCaption,
+      String    strComments
+   ) throws OSSException
+   {
+      return new Blog(lId, lDomainId, creationTimestamp, modificationTimestamp, 
+                      strBlogFolder, strCaption, strComments);
+   }
+
+   /**
+    * Create test data from a given parameters.
+    *
+    * @param lId - Unique ID identifying this test data
+    * @param lDomainId - Unique ID identifying domain for this test data
+    * @param creationTimestamp - creation timestamp for this test data
+    * @param modificationTimestamp - modification timestamp for this test data
     * @param strField1 - first field of the test data
     * @param strField2 - second field of the test data
     * @param strField3 - third field of the test data
@@ -90,10 +120,107 @@ public class BlogTest extends ModifiableDataObjectTest
       String    strField3
    ) throws OSSException
    {
-      return new Blog(lId, lDomainId, creationTimestamp, modificationTimestamp, 
-                      strField1, strField2, strField3);
+      return createTestBlog(lId, lDomainId, creationTimestamp, modificationTimestamp, 
+                            strField1, strField2, strField3);
    }
 
    // Tests ////////////////////////////////////////////////////////////////////
 
+   /**
+    * Test getFolder method 
+    * 
+    * @throws Exception - and error has occurred  
+    */
+   public void testGetFolder(
+   ) throws Exception
+   {
+      Timestamp now = new Timestamp((new Date()).getTime());
+      Timestamp later = new Timestamp((new Date()).getTime() + 1000);
+      Timestamp evenlater = new Timestamp((new Date()).getTime() + 2000);
+		Blog data1 = createTestBlog(1, 11, now, now, "1value1", 
+                                  "1value2", "1value3");
+		Blog data2 = createTestBlog(2, 22, later, evenlater, "2value1", 
+                                  "2value2", "2value3");
+		Blog data3 = createTestBlog(3, 33, later, evenlater, null, null, null);
+		
+		assertEquals("Blog folder doesn't match", "1value1", data1.getFolder());
+		assertEquals("Blog folder doesn't match", "2value1", data2.getFolder());
+		assertNull("Blog folder doesn't match", data3.getFolder());
+   }
+
+   /**
+    * Test getCaption method 
+    * 
+    * @throws Exception - and error has occurred  
+    */
+   public void testGetCaption(
+   ) throws Exception
+   {
+      Timestamp now = new Timestamp((new Date()).getTime());
+      Timestamp later = new Timestamp((new Date()).getTime() + 1000);
+      Timestamp evenlater = new Timestamp((new Date()).getTime() + 2000);
+		Blog data1 = createTestBlog(1, 11, now, now, "1value1", 
+                                  "1value2", "1value3");
+		Blog data2 = createTestBlog(2, 22, later, evenlater, "2value1", 
+                                  "2value2", "2value3");
+		Blog data3 = createTestBlog(3, 33, later, evenlater, null, null, null);
+		
+		assertEquals("Blog caption doesn't match", "1value2", data1.getCaption());
+		assertEquals("Blog caption doesn't match", "2value2", data2.getCaption());
+		assertNull("Blog caption doesn't match", data3.getCaption());
+   }
+
+   /**
+    * Test getComments method 
+    * 
+    * @throws Exception - and error has occurred  
+    */
+   public void testGetComments(
+   ) throws Exception
+   {
+      Timestamp now = new Timestamp((new Date()).getTime());
+      Timestamp later = new Timestamp((new Date()).getTime() + 1000);
+      Timestamp evenlater = new Timestamp((new Date()).getTime() + 2000);
+		Blog data1 = createTestBlog(1, 11, now, now, "1value1", 
+                                  "1value2", "1value3");
+		Blog data2 = createTestBlog(2, 22, later, evenlater, "2value1", 
+                                  "2value2", "2value3");
+		Blog data3 = createTestBlog(3, 33, later, evenlater, null, null, null);
+		
+		assertEquals("Blog comments doesn't match", "1value3", data1.getComments());
+		assertEquals("Blog comments doesn't match", "2value3", data2.getComments());
+		assertNull("Blog comments doesn't match", data3.getComments());
+   }
+
+
+   /**
+    * Test getIsPreformated method 
+    * 
+    * @throws Exception - and error has occurred  
+    */
+   public void testGetIsPreformated(
+   ) throws Exception
+   {
+      Timestamp now = new Timestamp((new Date()).getTime());
+      Timestamp later = new Timestamp((new Date()).getTime() + 1000);
+      Timestamp evenlater = new Timestamp((new Date()).getTime() + 2000);
+		Blog data1 = createTestBlog(1, 11, now, now, "1value1", 
+                                  "1value2", "1value3");
+		Blog data2 = createTestBlog(2, 22, later, evenlater, "2value1", 
+                                  "2value2", "2value3");
+		Blog data3 = createTestBlog(3, 33, later, evenlater, null, null, null);
+		Blog data4 = createTestBlog(4, 44, now, now, "4value1", 
+                                  "4value2", "4value3\n");
+		Blog data5 = createTestBlog(5, 55, now, now, "5value1", 
+                                  "5value2", "\n5value3");
+		Blog data6 = createTestBlog(6, 66, now, now, "6value1", 
+                                  "6value2", "6value3\n6value3");
+		
+		assertFalse("Is preformatted flag doesn't match", data1.getIsPreformated());
+		assertFalse("Is preformatted flag doesn't match", data2.getIsPreformated());
+		assertFalse("Is preformatted flag doesn't match", data3.getIsPreformated());
+		assertTrue("Is preformatted flag doesn't match", data4.getIsPreformated());
+		assertTrue("Is preformatted flag doesn't match", data5.getIsPreformated());
+		assertTrue("Is preformatted flag doesn't match", data6.getIsPreformated());
+   }
 }
