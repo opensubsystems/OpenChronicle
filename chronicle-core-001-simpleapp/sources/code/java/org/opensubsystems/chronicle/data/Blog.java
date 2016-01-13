@@ -190,7 +190,7 @@ public class Blog extends ModifiableDataObjectImpl
       super(lId, BlogDataDescriptor.class, lDomainId, creationTimestamp, 
 			   modificationTimestamp);
       
-      m_strFolder   = strBlogFolder.trim();
+      m_strFolder   = strBlogFolder == null ? strBlogFolder : strBlogFolder.trim();
       m_strCaption  = strCaption;
       m_strComments = strComments;
    }
